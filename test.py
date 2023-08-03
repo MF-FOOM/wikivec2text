@@ -4,6 +4,7 @@ import torch
 import openai
 import tiktoken
 from model import GPTConfig, GPT
+from huggingface_hub import hf_hub_download
 
 enc = tiktoken.get_encoding("gpt2")
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -23,7 +24,7 @@ device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.aut
 ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torch.float16}[dtype]
 ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
 
-checkpoint = torch.load(os.path.join("out", 'ckpt.pt'), map_location=device)
+checkpoint = torch.load(hf_hub_download(repo_id="MF-FOOM/wikivec2text", filename="ckpt.pt"), map_location=device)
 model = GPT(GPTConfig(**checkpoint['model_args']))
 state_dict = checkpoint['model']
 unwanted_prefix = '_orig_mod.'
