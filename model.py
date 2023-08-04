@@ -206,8 +206,6 @@ class GPT(nn.Module):
         prefix_embeddings = torch.cat(b*[torch.unsqueeze(self.transformer.wte(torch.tensor([12685, 9043, 25], device=device)), 0)])
         suffix_embeddings = torch.cat(b*[torch.unsqueeze(self.transformer.wte(torch.tensor([12501, 9043, 25], device=device)), 0)])
 
-        print(prefix_embeddings.shape, ada_projected.shape, suffix_embeddings.shape, decoded_tkns_embs.shape)
-
         # concatenate the prefix, ada_projected, suffix, and target_embeddings
         # we don't remove the last token from target_embeddings, because we'll have it predict <|endoftext|>
         embs = torch.cat((prefix_embeddings, ada_projected, suffix_embeddings, decoded_tkns_embs), dim=1)
